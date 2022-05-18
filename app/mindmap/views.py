@@ -31,13 +31,17 @@ class MindMapViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class LeafViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class LeafViewSet(mixins.UpdateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.DestroyModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """Manage Leafs in the database."""
     serializer_class = serializers.LeafSerializer
     queryset = Leaf.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get_query(self):
+    def get_queryset(self):
         """Filter queryset to an authenticated user."""
         return self.queryset.filter(user=self.request.user).order_by('-path')

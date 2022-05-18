@@ -1,7 +1,6 @@
 """
 Tests for leafs APIs
 """
-from email import message
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
@@ -14,6 +13,11 @@ from core.models import Leaf
 from mindmap.serializers import LeafSerializer
 
 LEAFS_URL = reverse('mindmap:leaf-list')
+
+
+def detail_url(leaf_id):
+    """Create and return an leaf detail URL."""
+    return reverse('mindmap:leaf-detail', args=[leaf_id])
 
 
 def create_user(email='test@example.com', password='testpass123'):
@@ -81,3 +85,36 @@ class PrivateLeafsApiTests(TestCase):
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['path'], leaf.path)
         self.assertEqual(res.data[0]['id'], leaf.id)
+
+    def test_update_leaf(self):
+        """Test to update a leaf"""
+        leaf = Leaf.objects.create(
+            user=self.user,
+            path='o/helo',
+            text='no/way'
+        )
+
+        payload = {'path': 'oh/hello'}
+        url = detail_url(leaf.id)
+        res = self.client.patch(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        leaf.refresh_from_db()
+        self.assertEqual(leaf.path, payload['path'])
+
+    def test_delete_leaf(self):
+        """Test to delete a leaf"""
+        leaf = Leaf.objects.create(
+            user=self.user,
+            path='o/helo',
+            text='no/way'
+        )
+
+        url = detail_url(leaf.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        leafs = Leaf.objects.filter(user=self.user)
+        self.assertFalse(leafs.exists())
+
+

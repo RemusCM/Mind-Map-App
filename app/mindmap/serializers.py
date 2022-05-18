@@ -20,11 +20,43 @@ class LeafSerializer(serializers.ModelSerializer):
 
 class MindMapSerializer(serializers.ModelSerializer):
     """Serializer for MindMaps"""
+    leafs = LeafSerializer(many=True, required=False)
 
     class Meta:
         model = MindMap
-        fields = ['id', 'title']
+        fields = ['id', 'title', 'leafs', ]
         read_only_fields = ['id']
+
+    def _get_or_create_leafs(self, leafs, mindmap):
+        """Handle getting or creating leafs for MindMaps"""
+        auth_user = self.context['request'].user
+        for leaf in leafs:
+            leaf_obj, create = Leaf.objects.get_or_create(
+                user=auth_user,
+                **leaf,
+            )
+            mindmap.leafs.add(leaf_obj)
+
+    def create(self, validated_data):
+        """Create a MindMap"""
+        leafs = validated_data.pop('leafs', [])
+        mindmap = MindMap.objects.create(**validated_data)
+        self._get_or_create_leafs(leafs, mindmap)
+        return mindmap
+
+    def update(self, instance, validated_data):
+        """Update a MindMap"""
+        leafs = validated_data.pop('leafs', None)
+        if leafs is not None:
+            instance.leafs.clear()
+            self._get_or_create_leafs(leafs, instance)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
 
 
 # class MindMapDetailSerializer(MindMapSerializer):
