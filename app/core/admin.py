@@ -46,5 +46,3 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.MindMap)
 admin.site.register(models.Leaf)
-
-

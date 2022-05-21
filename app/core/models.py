@@ -52,7 +52,6 @@ class MindMap(models.Model):
         on_delete=models.CASCADE,
     )
     title = models.CharField(max_length=255)
-    leafs = models.ManyToManyField('Leaf')
 
     def __str__(self):
         return self.title
@@ -64,16 +63,14 @@ class Leaf(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    # mindmap = models.ForeignKey(
-    #     settings.MINDMAP_MODEL,
-    #     on_delete=models.CASCADE,
-    # )
+    mindmap = models.ForeignKey(
+        settings.MINDMAP_MODEL,
+        related_name='leafs',
+        on_delete=models.CASCADE,
+        null=True,
+    )
     path = models.CharField(max_length=255)
     text = models.CharField(max_length=255)
-
-    # Will use this function to pretty print
-    def pretty_print(self):
-        pass
 
     def __str__(self):
         return self.path

@@ -139,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
 # Mind Map model
-# MINDMAP_MODEL = 'core.MindMap'
+MINDMAP_MODEL = 'core.MindMap'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

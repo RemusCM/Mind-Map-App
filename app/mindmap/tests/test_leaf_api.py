@@ -116,5 +116,3 @@ class PrivateLeafsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         leafs = Leaf.objects.filter(user=self.user)
         self.assertFalse(leafs.exists())
-
-
