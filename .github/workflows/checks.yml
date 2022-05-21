@@ -1,5 +1,5 @@
 ---
-name: Checks
+name: Test and Lint
 
 on: workflow_dispatch
 
