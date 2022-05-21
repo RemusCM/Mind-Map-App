@@ -1,5 +1,5 @@
 ---
-name: Checks
+name: Run Tests and Linter
 
 on: workflow_dispatch
 
