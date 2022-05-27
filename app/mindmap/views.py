@@ -8,12 +8,49 @@ from rest_framework import (
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
+# from anytree import AbstractStyle, Node, RenderTree
 
 from core.models import (
     MindMap,
     Leaf
 )
 from mindmap import serializers
+
+
+def pretty_print(node, tab_counter=0, result=None) -> str:
+    """Pretty print tree from node"""
+    if result is None:
+        result = ""
+
+    if node.children == []:
+        tabs = ""
+        for i in range(0, tab_counter):
+            tabs += "\t"
+
+        result += tabs + node.data + "\n"
+        return str(result)
+
+    else:
+        tabs = ""
+        for i in range(0, tab_counter):
+            tabs += "\t"
+        result += tabs + node.data + "/\n"
+        tab_counter += 1
+        for child_node in node.children:
+            result += pretty_print(child_node, tab_counter, result)
+        return result
+
+
+class Node(object):
+    def __init__(self, data):
+        self.data = data
+        self.children = []
+
+    def add_child(self, obj):
+        self.children.append(obj)
+
+    def __str__(self) -> str:
+        return pretty_print(self, tab_counter=0, result=None)
 
 
 class MindMapViewSet(viewsets.ModelViewSet):
@@ -33,27 +70,41 @@ class MindMapViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        print(instance)
         serializer = self.get_serializer(instance)
-        print(serializer)
-        print(serializer.data['title'])
-        print(serializer.data['title'])
+        root = Node(data=str(serializer.data['title']))
 
-        paths = "\n"
-
+        # Tree Creation
+        node = root
         for path in serializer.data['leafs']:
-            tabCounter = 1
             subpaths = path.split(sep='/')
-            for subpath in subpaths:
+            print(subpaths)
+            for index, value, in enumerate(subpaths):
+                print("index ", index, value)
+                # Navigate to end of known tree
+                for i in range(index):
+                    for j in node.children:
+                        if j.data == subpaths[index-1]:
+                            node = j
 
-                for tab in range(0, tabCounter):
-                    paths += "\t"
-                tabCounter += 1
-                paths += subpath + "/\n"
-        paths.rstrip()
+                exists_flag = False
+                for child_node in node.children:
+                    if child_node.data == value:
+                        exists_flag = True
+                        break
+                if exists_flag:
+                    exists_flag = False
+                    if index == len(subpaths) - 1:
+                        node = root
+                else:
 
-        return HttpResponse(str(serializer.data['title'])+"/"+paths,
-                            content_type="text/plain")
+                    node.add_child(Node(data=value))
+                    exists_flag = False
+                    node = root
+
+        return HttpResponse(
+            str(node)[str(node).rfind(serializer.data['title']):].rstrip(),
+            content_type="text/plain"
+            )
 
 
 class LeafViewSet(mixins.UpdateModelMixin,
