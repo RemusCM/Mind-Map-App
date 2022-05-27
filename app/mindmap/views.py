@@ -77,13 +77,11 @@ class MindMapViewSet(viewsets.ModelViewSet):
         node = root
         for path in serializer.data['leafs']:
             subpaths = path.split(sep='/')
-            print(subpaths)
             for index, value, in enumerate(subpaths):
-                print("index ", index, value)
                 # Navigate to end of known tree
                 for i in range(index):
                     for j in node.children:
-                        if j.data == subpaths[index-1]:
+                        if j.data == subpaths[i]:
                             node = j
 
                 exists_flag = False
