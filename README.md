@@ -86,4 +86,8 @@ devStringRelatedField branch.
 
 ## Points to improve
 Remove unnecessary branches.
+<<<<<<< HEAD
 Add deployment to cloud. I tried in another branch (implementDeployment), but it was taking too long, and it was my first time trying, and I was running into issues. 
+=======
+Add deployment to cloud. I tried in another branch (implementDeployment), but it was taking too long, and it was my first time trying, and I was running into issues. 
+>>>>>>> bc515b61aae3d5ca3740d3798f934a82648eaf0d
