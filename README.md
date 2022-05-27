@@ -61,13 +61,27 @@ curl -X GET "http://localhost:8000/api/mindmap/leafs/1/" -H  "accept: applicatio
 
 which outputs:
 ```bash
-{"id":1,"path":"i/like/potatoes","text":"Because reasons"}
+{
+  "id": 7,
+  "path": "i/like/potatoes",
+  "text": "Because reasons"
+}
 ```
 
 ###### Pretty Printing a whole mindmap
+```bash
 curl -X GET "http://localhost:8000/api/mindmap/mindmaps/1/" -H  "accept: application/json" -H  "Authorization: Token <ACCESS_TOKEN>"
+```
 
-
+which outputs:
+```bash
+Sample Mindmap/
+	i/
+		like/
+			potatoes
+		eat/
+			tomatoes
+```
 ## Testing and Linting
 Locally, you can run these two commands. For linting, run
 ```bash
@@ -85,8 +99,5 @@ Otherwise, you can also run the Test and Lint workflow on the Actions tab.
 
 ## Points to improve
 Remove unnecessary branches.
-<<<<<<< HEAD
 Add deployment to cloud. I tried in another branch (implementDeployment), but it was taking too long, and it was my first time trying, and I was running into issues. 
-=======
-Add deployment to cloud. I tried in another branch (implementDeployment), but it was taking too long, and it was my first time trying, and I was running into issues. 
->>>>>>> bc515b61aae3d5ca3740d3798f934a82648eaf0d
+
