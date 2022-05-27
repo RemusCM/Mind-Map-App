@@ -7,7 +7,7 @@ Docker/Docker-compose
 
 ## Usage
 
-After cloning the repository, switch branch to devStringRelatedField. In a terminal at the location of the project, run the following:
+After cloning the repository: In a terminal at the location of the project, run the following:
 
 ```bash
 docker-compose up --build --remove-orphans
@@ -81,8 +81,7 @@ For testing with code coverage, run
 docker-compose run --rm app sh -c "coverage run manage.py test && coverage report"
 ```
 
-Otherwise, you can also run the Test and Lint workflow on the Actions tab. Make sure to run it on the 
-devStringRelatedField branch. 
+Otherwise, you can also run the Test and Lint workflow on the Actions tab. 
 
 ## Points to improve
 Remove unnecessary branches.
